@@ -258,6 +258,7 @@ var supportedModes = {
     Vala:        ["vala"],
     VBScript:    ["vbs|vb"],
     Velocity:    ["vm"],
+    PVL:  ["pvl"],
     Verilog:     ["v|vh|sv|svh"],
     VHDL:        ["vhd|vhdl"],
     Visualforce: ["vfp|component|page"],
