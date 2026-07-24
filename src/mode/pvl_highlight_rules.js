@@ -4,6 +4,48 @@ var oop = require("../lib/oop");
 var DocCommentHighlightRules = require("./doc_comment_highlight_rules").DocCommentHighlightRules;
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
+var specTypeKeywords = ("int|boolean|resource|process|frac|zfrac|bool|ref|" +
+    "rational|seq|set|vector|bag|pointer|map|option|either|tuple|type|" +
+    "any|nothing|string" +
+    "axiom|model|adt|prover_type|prover_function"
+    );
+    
+var specTypeModifiers = ("pure|thread_local|bip_annotation|opaque|unique|" +
+    "unique_pointer_field");
+
+var specStatementKeywords = (
+    "modifies|accessible|decreases|signals|" +
+    "requires|ensures|context|context_everywhere|loop_invariant|" +
+    "kernel_invariant|lock_invariant|" +
+    "with|then|given|yields|reveal|" +
+    "apply|fold|unfold|open|close|assert|assume|inhale|exhale|label|" + 
+    "extract|extract_body|frame|outline|refute|witness|ghost|send|recv|" + 
+    "transfer|csl_subject|spec_ignore|action|" + 
+    "atomic|commit"
+);
+
+var specSlashKeywords = (
+    "replacing_done|replacing" +
+    "unfolding|Unfolding|in|memberof|current_thread|forall|exists|" +
+    "forperm|forpermwithvalue|let|sum|choose|choose_fresh|length|old|" + 
+    "asserting|assuming|typeof|type|matrix|array|pointer|pointer_index|" + 
+    "pointer_block|pointer_block_length|pointer_block_offset|" + 
+    "pointer_length|shared_mem_size|values|vcmp|vrep|msum|mcmp|mrep|result|" +
+    "ltid|gtid|nd_index|nd_length|nd_partial_index|polarity_dependent|" +
+    "smtlib|boogie|euclidean_div|euclidean_mod|pow|is_int|"
+);
+
+var specExpressionKeywords = (
+    "Reducible|AddsTo|APerm|ArrayPerm|Contribution|held|committed|HPerm|" +
+    "idle|perm|Perm|PointsTo|running|Some|Left|Right|Value|AutoValue|" +
+    "false|true|" +
+    "none|None|write|read|empty"
+)
+
+var specOperators = (
+    "\\?\\.|\\\\|\\*\\*|==>|-\\*|\\.\\.|<-|:\\|"
+);
+
 var PVLHighlightRules = function() {
     var identifierRe = "[a-zA-Z_$][a-zA-Z0-9_$]*";
 
@@ -12,55 +54,7 @@ var PVLHighlightRules = function() {
         "in|id|new|unfolding|return|lock|unlock|wait|notify|" +
         "fork|join|if|else|barrier|par|and|vec|while|for|goto|void|atomic|invariant"
     );
-
-    var specTypeKeywords = ("int|boolean|resource|process|frac|zfrac|bool|ref|" +
-        "rational|seq|set|vector|bag|pointer|map|option|either|tuple|type|" +
-        "any|nothing|string" +
-        "axiom|model|adt|prover_type|prover_function"
-        );
-        
-    var specTypeModifiers = ("pure|thread_local|bip_annotation|opaque|unique|" +
-        "unique_pointer_field");
-
-    var specStatementKeywords = (
-        "modifies|accessible|decreases|signals|" +
-        "requires|ensures|context|context_everywhere|loop_invariant|" +
-        "kernel_invariant|lock_invariant|" +
-        "with|then|given|yields|reveal|" +
-        "apply|fold|unfold|open|close|assert|assume|inhale|exhale|label|" + 
-        "extract|extract_body|frame|outline|refute|witness|ghost|send|recv|" + 
-        "transfer|csl_subject|spec_ignore|action|" + 
-        "atomic|commit"
-    );
     
-    var specSlashKeywords = (
-        "replacing_done|replacing" +
-        "unfolding|Unfolding|in|memberof|current_thread|forall|exists|" +
-        "forperm|forpermwithvalue|let|sum|choose|choose_fresh|length|old|" + 
-        "asserting|assuming|typeof|type|matrix|array|pointer|pointer_index|" + 
-        "pointer_block|pointer_block_length|pointer_block_offset|" + 
-        "pointer_length|shared_mem_size|values|vcmp|vrep|msum|mcmp|mrep|result|" +
-        "ltid|gtid|nd_index|nd_length|nd_partial_index|polarity_dependent|" +
-        "smtlib|boogie|euclidean_div|euclidean_mod|pow|is_int|"
-    );
-    
-    var specExpressionKeywords = (
-        "Reducible|AddsTo|APerm|ArrayPerm|Contribution|held|committed|HPerm|" +
-        "idle|perm|Perm|PointsTo|running|Some|Left|Right|Value|AutoValue|" +
-        "false|true|" +
-        "none|None|write|read|empty"
-    )
-    
-    var specOperators = (
-        "\\?\\.|\\\\|\\*\\*|==>|-\\*|\\.\\.|<-|:\\|"
-    );
-
-    var specKeywords = (
-        specTypeKeywords + "|" + specStatementKeywords + "|" 
-        // +
-        // "null|exists|Perm|HPerm|empty|write|false|true|Future|" +
-        // "AbstractState|to|from|PointsTo|Value|read|write"
-    );
 
     var builtinConstants = "true|false|null|this";
 
@@ -107,7 +101,7 @@ var PVLHighlightRules = function() {
         ],
         "specs": [
             {
-                token: "meta.annotation.spec",
+                token: "support.constant.spec",
                 regex: "\\/\\/@",
                 push: [
                     {
@@ -122,11 +116,11 @@ var PVLHighlightRules = function() {
                     {include: "statements"}
                 ]
             }, {
-                token: "meta.annotation.spec",
+                token: "support.constant.spec",
                 regex: "\\/\\*@",
                 push: [
                     {
-                        token: "meta.annotation.spec",
+                        token: "support.constant.spec",
                         regex: /@?\*\//,
                         next: "pop"
                     },

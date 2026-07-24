@@ -35,7 +35,7 @@ var c_cppHighlightRules = function(extraKeywords) {
         "NULL|true|false|TRUE|FALSE|nullptr"
     );
 
-    var keywordMapper = this.$keywords = this.createKeywordMapper(Object.assign({
+    var keywordMap = {
         "keyword.control" : keywordControls,
         "storage.type" : storageType,
         "storage.modifier" : storageModifiers,
@@ -43,7 +43,18 @@ var c_cppHighlightRules = function(extraKeywords) {
         "variable.language": "this",
         "constant.language": builtinConstants,
         "support.function.C99.c": cFunctions
-    }, extraKeywords), "identifier");
+    };
+
+    if (extraKeywords) {
+        Object.keys(extraKeywords).forEach(function(key) {
+            if (keywordMap[key])
+                keywordMap[key] += "|" + extraKeywords[key];
+            else
+                keywordMap[key] = extraKeywords[key];
+        });
+    }
+
+    var keywordMapper = this.$keywords = this.createKeywordMapper(keywordMap, "identifier");
 
     var identifierRe = "[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*\\b";
     var escapeRe = /\\(?:['"?\\abfnrtv]|[0-7]{1,3}|x[a-fA-F\d]{2}|u[a-fA-F\d]{4}U[a-fA-F\d]{8}|.)/.source;
