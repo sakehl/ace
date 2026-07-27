@@ -3,7 +3,7 @@
 var oop = require("../lib/oop");
 var JavaScriptMode = require("./javascript").Mode;
 var HighlightRules = require("./annotated_java_highlight_rules").annotated_javaHighlightRules;
-var JavaFoldMode = require("./folding/java").FoldMode;
+var JavaFoldMode = require("./folding/annotated_java").FoldMode;
 
 var Mode = function() {
     JavaScriptMode.call(this);
@@ -14,6 +14,9 @@ var Mode = function() {
 oop.inherits(Mode, JavaScriptMode);
 
 (function() {
+    this.lineCommentStart = "//";
+    this.blockComment = {start: "/*", end: "*/"};
+
     this.createWorker = function(session) {
         return null;
     };
